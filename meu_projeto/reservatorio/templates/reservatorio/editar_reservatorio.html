@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Reservatório{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Editar Reservatório: {{ reservatorio.nome }}</h1>
+<form method="post" class="card p-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Salvar</button>
+    <a href="{% url 'listar_reservatorios' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

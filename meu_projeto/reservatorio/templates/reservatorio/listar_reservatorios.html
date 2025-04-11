@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lista de Reservatórios{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'reservatorio/styles.css' %}">
+<h1 class="mb-4">Lista de Reservatórios</h1>
+
+<!-- Botão para adicionar reservatório -->
+<div class="mb-4 d-flex justify-content-between">
+    <a href="{% url 'adicionar_reservatorio' %}" class="btn btn-success">Adicionar Reservatório</a>
+    <a href="{% url 'gerenciar_reservatorios' %}" class="btn btn-secondary">Gerenciar</a>
+</div>
+
+<!-- Formulário de busca -->
+<form method="get" class="mb-4">
+    <input type="text" name="q" value="{{ query }}" placeholder="Buscar por nome" class="form-control" />
+    <button type="submit" class="btn btn-primary mt-2">Filtrar</button>
+</form>
+
+<!-- Grid de reservatórios -->
+<div class="reservatorios-grid">
+    {% for reservatorio in reservatorios %}
+    <div class="reservatorio-box">
+        <h3>{{ reservatorio.nome }}</h3>
+        <p>Limite: {{ reservatorio.capacidade }}L</p>
+        <p>Porcentagem: {{ reservatorio.altura_agua_calculada|floatformat:2 }}%</p>
+        <div class="water-glass">
+            <div class="water-level" style="height: {{ reservatorio.altura_agua_calculada }}%;"></div>
+        </div>
+        <p>Status da Bomba: {{ reservatorio.status_bomba }}</p>
+    </div>
+    {% endfor %}
+</div>
+<script src="{% static 'reservatorio/script.js' %}"></script>
+{% endblock %}
