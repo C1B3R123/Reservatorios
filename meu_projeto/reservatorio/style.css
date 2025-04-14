@@ -72,36 +72,6 @@ h1 {
     background-color: #f2f2f2;
 }
 
-/* Estilo da bateria */
-.battery {
-    width: 100px;
-    height: 30px;
-    border: 2px solid #000;
-    border-radius: 5px;
-    position: relative;
-    background-color: #e9ecef;
-    margin: 0 auto;
-}
-
-.battery::after {
-    content: '';
-    width: 10px;
-    height: 15px;
-    background-color: #000;
-    position: absolute;
-    top: 50%;
-    right: -12px;
-    transform: translateY(-50%);
-    border-radius: 2px;
-}
-
-.battery-level {
-    height: 100%;
-    background-color: #007bff;
-    border-radius: 3px;
-    transition: width 0.3s ease-in-out;
-}
-
 /* Estilo do copo */
 .water-glass {
     width: 100px;
