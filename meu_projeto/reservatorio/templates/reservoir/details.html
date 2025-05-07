@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalhes do Reservatório{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">{{ reservoir.name }}</h1>
+
+    <div class="row">
+        <!-- Informações Gerais -->
+        <div class="col-md-6">
+            <h3 class="mb-3">Informações Gerais</h3>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Capacidade:</strong> {{ reservoir.capacity }}L</li>
+                <li class="list-group-item"><strong>Nível Atual:</strong> {{ reservoir.current_level }}L</li>
+                <li class="list-group-item"><strong>Porcentagem:</strong> {{ reservoir.water_height|floatformat:2 }}%</li>
+                <li class="list-group-item"><strong>Status da Bomba:</strong> {{ reservoir.pump_status }}</li>
+                <li class="list-group-item"><strong>Endereço:</strong> {{ reservoir.address|default:"Não informado" }}</li>
+            </ul>
+        </div>
+
+        <!-- Visualização do Tanque -->
+        <div class="col-md-6 text-center">
+            <h3 class="mb-3">Visualização do Tanque</h3>
+            <div class="tank">
+                <div class="water" style="height: {{ reservoir.water_height|floatformat:0 }}%;"></div>
+            </div>
+            <p class="mt-2"><strong>{{ reservoir.water_height|floatformat:2 }}%</strong> cheio</p>
+        </div>
+    </div>
+
+    <!-- Mapa -->
+    <div id="map" style="height: 500px; margin-top: 20px;"></div>
+</div>
+
+<script>
+    // Inicializar o mapa com as coordenadas do reservatório
+    var map = L.map('map').setView([{{ latitude }}, {{ longitude }}], 15);
+
+    // Adicionar camada de mapa
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Adicionar marcador no mapa com informações ao passar o mouse
+    L.marker([{{ latitude }}, {{ longitude }}])
+        .addTo(map)
+        .bindPopup(`<b>{{ reservoir.name }}</b><br>Capacidade: {{ reservoir.capacity }}L<br>Status: {{ reservoir.pump_status }}<br>Endereço: {{ reservoir.address|default:"Não informado" }}`)
+        .openPopup();
+</script>
+{% endblock %}

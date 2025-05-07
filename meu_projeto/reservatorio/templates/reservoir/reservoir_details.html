@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalhes do Reservatório{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">{{ reservatorio.nome }}</h1>
+
+    <!-- Informações do Reservatório -->
+    <div class="row">
+        <div class="col-md-6">
+            <h3 class="mb-3">Informações Gerais</h3>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Capacidade:</strong> {{ reservatorio.capacidade }}L</li>
+                <li class="list-group-item"><strong>Nível Atual:</strong> {{ reservatorio.nivel_atual }}L</li>
+                <li class="list-group-item"><strong>Porcentagem:</strong> {{ reservatorio.altura_agua|floatformat:2 }}%</li>
+                <li class="list-group-item"><strong>Status da Bomba:</strong> {{ reservatorio.status_bomba }}</li>
+                <li class="list-group-item"><strong>Endereço:</strong> {{ reservatorio.endereco|default:"Não informado" }}</li>
+            </ul>
+        </div>
+        <div class="col-md-6 text-center">
+            <h3 class="mb-3">Visualização do Tanque</h3>
+            <div class="tank">
+                <div class="water" style="height: {{ reservatorio.altura_agua|floatformat:0 }}%;"></div>
+            </div>
+            <p class="mt-2"><strong>{{ reservatorio.altura_agua|floatformat:2 }}%</strong> cheio</p>
+        </div>
+    </div>
+
+<!-- Mapa -->
+<div id="map" style="height: 500px; margin-bottom: 20px;"></div>
+<script>
+    // Inicializar o mapa com as coordenadas do reservatório
+    var map = L.map('map').setView([{{ latitude }}, {{ longitude }}], 15); // Zoom ajustado para 15
+
+    // Adicionar camada de mapa
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Adicionar marcador para o reservatório atual
+    L.marker([{{ latitude }}, {{ longitude }}])
+        .addTo(map)
+        .bindPopup(`<b>{{ reservatorio.nome }}</b><br>Capacidade: {{ reservatorio.capacidade }}L<br>Status: {{ reservatorio.status_bomba }}<br>Endereço: {{ reservatorio.endereco|default:"Não informado" }}`);
+</script>
+<script src="{% static 'reservatorio/script.js' %}"></script>
+{% endblock %}

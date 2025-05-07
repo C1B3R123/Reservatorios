@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerenciar Reservatórios{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Gerenciar Reservatórios</h1>
+<a href="{% url 'add_reservoir' %}" class="btn btn-success mb-3">Adicionar Reservatório</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Capacidade</th>
+            <th>Nível Atual</th>
+            <th>Status da Bomba</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reservoir in reservoirs %}
+        <tr>
+            <td>{{ reservoir.name }}</td>
+            <td>{{ reservoir.capacity }}L</td>
+            <td>{{ reservoir.current_level }}L</td>
+            <td>{{ reservoir.pump_status }}</td>
+            <td>
+                <a href="{% url 'edit_reservoir' reservoir.id %}" class="btn btn-warning btn-sm">Editar</a>
+                <button class="btn btn-danger btn-sm" onclick="confirmarExclusao({{ reservoir.id }})">Excluir</button>
+                <form id="delete-form-{{ reservoir.id }}" method="post" action="{% url 'delete_reservoir' reservoir.id %}" style="display: none;">
+                    {% csrf_token %}
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function confirmarExclusao(id) {
+        if (confirm("Tem certeza de que deseja excluir este reservatório?")) {
+            document.getElementById(`delete-form-${id}`).submit();
+        }
+    }
+</script>
+{% endblock %}

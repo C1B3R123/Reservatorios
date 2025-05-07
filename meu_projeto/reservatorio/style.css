@@ -1,0 +1,132 @@
+/* Estilo geral */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Cabeçalho */
+h1 {
+    color: #343a40;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Botões */
+.btn {
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Tabela */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: white;
+}
+
+.table th, .table td {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    text-align: center;
+}
+
+.table th {
+    background-color: #343a40;
+    color: white;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
+}
+
+/* Estilo da bateria */
+.battery {
+    width: 100px;
+    height: 30px;
+    border: 2px solid #000;
+    border-radius: 5px;
+    position: relative;
+    background-color: #e9ecef;
+    margin: 0 auto;
+}
+
+.battery::after {
+    content: '';
+    width: 10px;
+    height: 15px;
+    background-color: #000;
+    position: absolute;
+    top: 50%;
+    right: -12px;
+    transform: translateY(-50%);
+    border-radius: 2px;
+}
+
+.battery-level {
+    height: 100%;
+    background-color: #007bff;
+    border-radius: 3px;
+    transition: width 0.3s ease-in-out;
+}
+
+/* Estilo do copo */
+.water-glass {
+    width: 100px;
+    height: 150px;
+    border: 2px solid #000;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    background-color: #e9ecef;
+    margin: 0 auto;
+}
+
+/* Nível da água */
+.water-level {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    background-color: #007bff;
+    transition: height 1s ease-in-out; /* Animação suave */
+}
+
+/* Texto de status */
+.status {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: bold;
+}

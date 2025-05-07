@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Adicionar Reservatório{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Adicionar Reservatório</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div id="map" style="height: 400px; margin-bottom: 20px;"></div>
+    <button type="submit" class="btn btn-success">Salvar</button>
+</form>
+
+<script>
+    // Inicializar o mapa
+    var map = L.map('map').setView([-15.7942, -47.8822], 4); // Coordenadas iniciais (Brasil)
+
+    // Adicionar camada de mapa
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Adicionar marcador inicial
+    var marker = L.marker([-15.7942, -47.8822], { draggable: true }).addTo(map);
+
+    // Atualizar endereço ao mover o marcador
+    marker.on('dragend', function (e) {
+        var latLng = marker.getLatLng();
+        document.getElementById('id_latitude').value = latLng.lat;
+        document.getElementById('id_longitude').value = latLng.lng;
+
+        // Buscar endereço com base nas coordenadas
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latLng.lat}&lon=${latLng.lng}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.address) {
+                    document.getElementById('id_address').value = data.display_name || "Endereço não encontrado";
+                }
+            });
+    });
+
+    // Atualizar marcador ao alterar o endereço
+    var inputAddress = document.getElementById('id_address');
+    inputAddress.addEventListener('change', function () {
+        var endereco = this.value;
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${endereco}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    var lat = data[0].lat;
+                    var lon = data[0].lon;
+                    map.setView([lat, lon], 15);
+                    marker.setLatLng([lat, lon]);
+                    document.getElementById('id_latitude').value = lat;
+                    document.getElementById('id_longitude').value = lon;
+                } else {
+                    alert('Endereço não encontrado!');
+                }
+            });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,56 @@
+{%extends 'base.html'%}
+{%block content%}
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'list_reservoirs' %}">Listar Reservatórios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home">
+            <h1>Bem-vindo ao Sistema de Reservatórios</h1>
+            <p>Gerencie e monitore seus reservatórios de forma eficiente e prática.</p>
+        </section>
+
+        <section id="sobre">
+            <h2>Sobre Nós</h2>
+            <p>Somos especialistas em soluções para monitoramento e gestão de reservatórios, oferecendo tecnologia de ponta para atender às suas necessidades.</p>
+        </section>
+
+        <section id="servicos">
+            <h2>Nossos Serviços</h2>
+            <ul>
+                <li>Monitoramento em tempo real</li>
+                <li>Relatórios detalhados</li>
+                <li>Alertas automáticos</li>
+                <li>Suporte técnico especializado</li>
+            </ul>
+        </section>
+
+        <section id="contato">
+            <h2>Contato</h2>
+            <form action="/enviar" method="post">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+                
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="mensagem">Mensagem:</label>
+                <textarea id="mensagem" name="mensagem" rows="4" required></textarea>
+                
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Sistema de Reservatórios.</p>
+    </footer>
+</body>
+</html>
+{% endblock %}

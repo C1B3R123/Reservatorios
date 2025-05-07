@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Reservatório{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Excluir Reservatório</h1>
+<p>Tem certeza de que deseja excluir o reservatório <strong>{{ reservatorio.nome }}</strong>?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Excluir</button>
+    <a href="{% url 'listar_reservatorios' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

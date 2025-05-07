@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Reservatório{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<h1 class="mb-4">Editar Reservatório</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div id="map" style="height: 400px; margin-bottom: 20px;"></div>
+    <button type="submit" class="btn btn-success">Salvar</button>
+</form>
+
+<script>
+    // Coordenadas iniciais do reservatório
+    var lat = {{ reservoir.latitude|default:"-15.7942" }};
+    var lon = {{ reservoir.longitude|default:"-47.8822" }};
+
+    // Inicializar o mapa
+    var map = L.map('map').setView([lat, lon], 15);
+
+    // Adicionar camada de mapa
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Adicionar marcador
+    var marker = L.marker([lat, lon], { draggable: true }).addTo(map);
+
+    // Atualizar campos de latitude e longitude ao mover o marcador
+    marker.on('dragend', function (e) {
+        var latLng = marker.getLatLng();
+        document.getElementById('id_latitude').value = latLng.lat;
+        document.getElementById('id_longitude').value = latLng.lng;
+    });
+
+    // Buscar localização por endereço
+    function buscarEndereco(endereco) {
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${endereco}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    var lat = data[0].lat;
+                    var lon = data[0].lon;
+                    map.setView([lat, lon], 15);
+                    marker.setLatLng([lat, lon]);
+                    document.getElementById('id_latitude').value = lat;
+                    document.getElementById('id_longitude').value = lon;
+                } else {
+                    alert('Endereço não encontrado!');
+                }
+            });
+    }
+
+    // Adicionar evento ao campo de endereço
+    var inputAddress = document.getElementById('id_address');
+    inputAddress.addEventListener('change', function () {
+        buscarEndereco(this.value);
+    });
+</script>
+{% endblock %}

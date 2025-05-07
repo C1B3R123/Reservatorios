@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lista de Reservatórios{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="{% static 'reservatorio/styles.css' %}">
+
+<h1 class="mb-4">Lista de Reservatórios</h1>
+
+<div class="mb-4 d-flex justify-content-between">
+    <a href="{% url 'add_reservoir' %}" class="btn btn-success">Adicionar Reservatório</a>
+    <a href="{% url 'manage_reservoirs' %}" class="btn btn-secondary">Gerenciar</a>
+</div>
+
+<form method="get" class="mb-4">
+    <input type="text" name="q" value="{{ query }}" placeholder="Buscar por nome" class="form-control" />
+    <button type="submit" class="btn btn-primary mt-2">Filtrar</button>
+</form>
+
+<!-- Mapa -->
+<div id="map" style="height: 500px; margin-bottom: 20px;"></div>
+
+<script>
+    // Inicializar o mapa
+    var map = L.map('map').setView([-15.7942, -47.8822], 4); // Coordenadas iniciais (Brasil)
+
+    // Adicionar camada de mapa
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Adicionar marcadores para todos os reservatórios
+    var reservoirs = {{ reservoirs_json|safe }};
+    reservoirs.forEach(function(reservoir) {
+        if (reservoir.latitude && reservoir.longitude) {
+            L.marker([reservoir.latitude, reservoir.longitude])
+                .addTo(map)
+                .bindPopup(`<b>${reservoir.name}</b><br>Capacidade: ${reservoir.capacity}L<br>Status: ${reservoir.pump_status}`);
+        }
+    });
+</script>
+
+<div class="reservatorios-grid">
+    {% for reservoir in reservoirs %}
+    <div class="reservatorio-box">
+        <h3>{{ reservoir.name }}</h3>
+        <p>Limite: {{ reservoir.capacity }}L</p>
+        <p>Porcentagem: {{ reservoir.water_height|floatformat:2 }}%</p>
+        <div class="water-glass">
+            <div class="water-level" style="height: {{ reservoir.water_height|floatformat:0 }}%;"></div>
+        </div>
+        <p>Status da Bomba: {{ reservoir.pump_status }}</p>
+        <a href="{% url 'reservoir_details' reservoir.id %}" class="btn btn-primary mt-2">Ver Detalhes</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
